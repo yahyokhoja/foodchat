@@ -1,230 +1,142 @@
-<!DOCTYPE html>
-<html lang="tg">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Фармоиши хӯрок</title>
-    <style>
-        body {
-            font-family: 'Tahoma', sans-serif;
-            background-color: #f4f4f9;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
+{% extends 'bot/base.html' %}
+{% load static %}
 
-        header {
-            background-color: #3498db;
-            color: white;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+{% block title %}Фармоиши хӯрок{% endblock %}
 
-        header nav a {
-            color: white;
-            text-decoration: none;
-            margin: 0 10px;
-            font-weight: bold;
-        }
+{% block content %}
 
-        header nav a:hover {
-            text-decoration: underline;
-        }
 
-        .container {
-            padding: 40px;
-            text-align: center;
-        }
+<div class="container">
+    <h1>Хуш омадед!</h1>
+    <div id="welcome-message"></div>
 
-        #registration-form {
-            margin-top: 30px;
-        }
-
-        #registration-form input {
-            padding: 10px;
-            margin: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            width: 250px;
-        }
-
-        #registration-form button {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        #registration-form button:hover {
-            background-color: #2980b9;
-        }
-
-        #login-logout-btn {
-            background-color: white;
-            color: #3498db;
-            padding: 8px 16px;
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        #login-logout-btn:hover {
-            background-color: #ecf0f1;
-        }
-
-        #welcome-message {
-            margin-top: 20px;
-            font-size: 18px;
-            color: #2c3e50;
-        }
-
-        #dishes-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-        }
-
-        .dish-card {
-            width: 300px;
-            margin: 20px;
-            padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            background-color: white;
-        }
-
-        .dish-card img {
-            width: 100%;
-            border-radius: 10px;
-        }
-
-        .dish-card h3 {
-            margin-top: 10px;
-        }
-
-        .dish-card p {
-            margin: 10px 0;
-        }
-
-        .dish-card button {
-            padding: 8px 12px;
-            background: #3498db;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .dish-card button:hover {
-            background: #2980b9;
-        }
-    </style>
-</head>
-<body>
-
-    <header>
-        <div><strong>🍽 Фармоиши хӯрок</strong></div>
-        <nav>
-            <a href="/">Саҳифаи асосӣ</a>
-            <a href="/admin/">Админ</a>
-            <a href="/menu/">Меню</a>
-            <a href="/api/">API</a>
-            <button id="login-logout-btn" onclick="toggleLoginLogout()">Войти</button>
-        </nav>
-    </header>
-
-    <div class="container">
-        <h1>Хуш омадед!</h1>
-        <div id="welcome-message"></div>
-
-        <div id="registration-form" style="display: none;">
-            <h3>Регистрация</h3>
-            <p>Номери телефони худро ворид кунед:</p>
-            <input type="text" id="phone-number" placeholder="Номери телефон" />
-            <br>
-            <button onclick="registerUser()">Сабт кардан</button>
-        </div>
+    <div id="registration-form" style="display: none;">
+        <h3>Регистрация</h3>
+        <p>Номери телефони худро ворид кунед:</p>
+        <input type="text" id="phone-number" placeholder="Номери телефон" />
+        <br>
+        <button onclick="registerUser()">Сабт кардан</button>
     </div>
+</div>
 
-    <h2>Меню</h2>
-    <div id="dishes-container"></div>
+<h2 class="text-center" style="text-align: center;">Меню</h2>
+<div id="dishes-container">
+    {% for dish in dishes %}
+    <div class="dish-card">
+        <img src="{{ dish.image.url }}" alt="{{ dish.name }}">
+        <h3>{{ dish.name }}</h3>
+        <p>{{ dish.description }}</p>
+        <strong>{{ dish.price }} сомонӣ</strong><br><br>
+        <button onclick='addToCart({ 
+            "id": "{{ dish.id }}", 
+            "name": "{{ dish.name }}", 
+            "description": "{{ dish.description }}", 
+            "price": "{{ dish.price }}", 
+            "image": "{{ dish.image.url }}" 
+        })'>Ба сабад</button>
+    </div>
+    {% empty %}
+    <p>Меню дар айни ҳол холӣ аст.</p>
+    {% endfor %}
+</div>
 
-    <script>
-        async function fetchDishes() {
-            try {
-                const response = await fetch('/api/dishes/');
-                const dishes = await response.json();
-                const container = document.getElementById('dishes-container');
-                container.innerHTML = '';
+<style>
+    #dishes-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 30px;
+    }
 
-                dishes.forEach(dish => {
-                    const card = document.createElement('div');
-                    card.classList.add('dish-card');
-                    card.innerHTML = `
-                        <img src="${dish.image}" alt="${dish.name}">
-                        <h3>${dish.name}</h3>
-                        <p>${dish.description}</p>
-                        <strong>${dish.price} сомонӣ</strong><br><br>
-                        <button onclick='addToCart(${JSON.stringify(dish)})'>Ба сабад</button>
-                    `;
-                    container.appendChild(card);
-                });
-            } catch (error) {
-                console.error('Хатогӣ ҳангоми боркунии меню:', error);
-            }
+    .dish-card {
+        width: 300px;
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        background-color: white;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: transform 0.2s ease;
+    }
+
+    .dish-card:hover {
+        transform: scale(1.02);
+    }
+
+    .dish-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    .dish-card h3 {
+        margin: 10px 0 5px;
+    }
+
+    .dish-card p {
+        color: #666;
+        font-size: 14px;
+    }
+
+    .dish-card button {
+        padding: 8px 12px;
+        background: #3498db;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .dish-card button:hover {
+        background: #2980b9;
+    }
+</style>
+
+<script>
+    function addToCart(dish) {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cart.push(dish);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        alert(`${dish.name} ба сабад илова шуд.`);
+    }
+
+    function checkLoginStatus() {
+        const phoneNumber = localStorage.getItem('phoneNumber');
+        const loginLogoutBtn = document.getElementById('login-logout-btn');
+        const welcomeMsg = document.getElementById('welcome-message');
+
+        if (phoneNumber) {
+            loginLogoutBtn.textContent = 'Выйти';
+            welcomeMsg.innerHTML = `Салом, <strong>${phoneNumber}</strong>!`;
+        } else {
+            loginLogoutBtn.textContent = 'Войти';
+            welcomeMsg.innerHTML = '';
         }
+    }
 
-        function addToCart(dish) {
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            cart.push(dish);
-            localStorage.setItem('cart', JSON.stringify(cart));
-            alert(`${dish.name} ба сабад илова шуд.`);
+    function toggleLoginLogout() {
+        const phoneNumber = localStorage.getItem('phoneNumber');
+        if (phoneNumber) {
+            localStorage.removeItem('phoneNumber');
+            alert("Шумо аз система баромадед.");
+            location.reload();
+        } else {
+            document.getElementById("registration-form").style.display = "block";
         }
+    }
 
-        function checkLoginStatus() {
-            const phoneNumber = localStorage.getItem('phoneNumber');
-            const loginLogoutBtn = document.getElementById('login-logout-btn');
-            const welcomeMsg = document.getElementById('welcome-message');
-
-            if (phoneNumber) {
-                loginLogoutBtn.textContent = 'Выйти';
-                welcomeMsg.innerHTML = `Салом, <strong>${phoneNumber}</strong>!`;
-            } else {
-                loginLogoutBtn.textContent = 'Войти';
-                welcomeMsg.innerHTML = '';
-            }
+    function registerUser() {
+        const phoneNumber = document.getElementById('phone-number').value;
+        if (phoneNumber) {
+            localStorage.setItem('phoneNumber', phoneNumber);
+            alert("Шумо бомуваффақият сабтином шудед!");
+            window.location.href = "/menu/";
+        } else {
+            alert("Лутфан, номери телефони худро ворид кунед.");
         }
+    }
 
-        function toggleLoginLogout() {
-            const phoneNumber = localStorage.getItem('phoneNumber');
-            if (phoneNumber) {
-                localStorage.removeItem('phoneNumber');
-                alert("Шумо аз система баромадед.");
-                location.reload();
-            } else {
-                document.getElementById("registration-form").style.display = "block";
-            }
-        }
-
-        function registerUser() {
-            const phoneNumber = document.getElementById('phone-number').value;
-            if (phoneNumber) {
-                localStorage.setItem('phoneNumber', phoneNumber);
-                alert("Шумо бомуваффақият сабтином шудед!");
-                window.location.href = "/menu/";
-            } else {
-                alert("Лутфан, номери телефони худро ворид кунед.");
-            }
-        }
-
-        checkLoginStatus();
-        fetchDishes();
-    </script>
-</body>
-</html>
+    checkLoginStatus();
+</script>
+{% endblock %}

@@ -11,10 +11,10 @@ from .models import Order
 from .serializers import DishSerializer
 from .models import Dish
 
-
 def index(request):
-    # Это представление рендерит шаблон 'index.html'
-    return render(request, "bot/index.html")
+    dishes = Dish.objects.filter(available=True)[:3]  # например, только 3 блюда
+    return render(request, "bot/index.html", {"dishes": dishes})
+
 
 
 @api_view(['GET'])
