@@ -157,12 +157,33 @@
         #registration-form button:hover {
             background-color: #2980b9;
         }
+
+        /* Кнопка входа/выхода */
+        #login-logout-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #login-logout-btn:hover {
+            background-color: #2980b9;
+        }
     </style>
 </head>
 <body>
 
     <h1>Хуш омадед ба боти фармоиши хӯрок!</h1>
     <p><a href="javascript:void(0);" onclick="openPopup()">Ба сӯҳбат гузаред</a></p>
+
+    <!-- Добавим ссылки на другие страницы -->
+    <p><a href="/admin/">Админ панел</a></p>  <!-- Ссылка на админку -->
+    <p><a href="/">Главная страница</a></p>    <!-- Ссылка на главную страницу -->
+
+    <!-- Кнопка Войти/Выйти -->
+    <button id="login-logout-btn" onclick="toggleLoginLogout()">Войти</button>
 
     <!-- Всплывающее окно -->
     <div id="popup-overlay"></div>
@@ -208,6 +229,18 @@
     </div>
 
     <script>
+        // Проверяем, есть ли зарегистрированный пользователь
+        function checkLoginStatus() {
+            const phoneNumber = localStorage.getItem('phoneNumber');
+            const loginLogoutBtn = document.getElementById('login-logout-btn');
+
+            if (phoneNumber) {
+                loginLogoutBtn.textContent = 'Выйти';
+            } else {
+                loginLogoutBtn.textContent = 'Войти';
+            }
+        }
+
         // Открытие всплывающего окна
         function openPopup() {
             const phoneNumber = localStorage.getItem('phoneNumber');
@@ -261,53 +294,41 @@
                 orderDetails += `${item.dish} — ${item.qty} шт.\n`;
             });
 
-            // Показать подробности заказа
             alert(orderDetails);
-
-            // Отправить заказ на сервер
-            sendOrderToServer(cart);
-
-            // Очистить корзину после оформления заказа
-            cart = [];  // Очистить корзину
-            updateCart();  // Обновить корзину на экране
+            cart = [];
+            updateCart();
+            closePopup();
         }
 
-        // Функция для отправки заказа на сервер
-        function sendOrderToServer(cart) {
-            const orderData = {
-                items: cart,
-                user: localStorage.getItem('phoneNumber'),  // Используем номер телефона для идентификации пользователя
-            };
-
-            fetch('https://your-django-server.com/api/orders/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(orderData),
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Заказ успешно отправлен', data);
-            })
-            .catch(error => {
-                console.error('Ошибка при отправке заказа', error);
-            });
-        }
-
-        // Регистрация пользователя
+        // Регистрация нового пользователя
         function registerUser() {
-            const phoneNumber = document.getElementById("phone-number").value;
-            if (!phoneNumber) {
-                alert("Пожалуйста, введите номер телефона.");
-                return;
+            const phoneNumber = document.getElementById('phone-number').value;
+            if (phoneNumber) {
+                localStorage.setItem('phoneNumber', phoneNumber);
+                alert("Вы успешно зарегистрированы!");
+                document.getElementById("registration-form").style.display = "none";
+                document.getElementById("popup").style.display = "block";
+                document.getElementById("popup-overlay").style.display = "block";
+                checkLoginStatus(); // Обновляем статус кнопки
+            } else {
+                alert("Пожалуйста, введите свой номер телефона.");
             }
-            localStorage.setItem('phoneNumber', phoneNumber);
-            alert("Вы успешно зарегистрированы!");
-            document.getElementById("registration-form").style.display = "none";
-            document.getElementById("popup").style.display = "block";
-            document.getElementById("popup-overlay").style.display = "block";
         }
+
+        // Вход/Выход
+        function toggleLoginLogout() {
+            const phoneNumber = localStorage.getItem('phoneNumber');
+            if (phoneNumber) {
+                localStorage.removeItem('phoneNumber');
+                alert("Вы вышли из системы.");
+                checkLoginStatus(); // Обновляем статус кнопки
+            } else {
+                openPopup(); // Открываем окно регистрации
+            }
+        }
+
+        // Проверяем статус входа при загрузке страницы
+        checkLoginStatus();
     </script>
 
 </body>

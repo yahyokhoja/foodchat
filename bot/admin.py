@@ -1,52 +1,59 @@
-# admin.py
 from django.contrib import admin
 from .models import Order
-from django.contrib import admin
-from django.utils.html import format_html
+from .models import Dish
 
+admin.site.register(Dish)
+
+@admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
-        'id', 
-        'order_name', 
-        'phone_number', 
-        'total_price', 
-        'created_at', 
-        'status', 
-        'payment_method', 
-        'delivery_method', 
-        'quantity', 
-        'delivery_time', 
-        'delivery_address', 
-        'delivery_cost', 
-        'discount', 
-        'ordered_by', 
-        'received_by', 
-        'delivery_duration'
+        'id',
+        'order_name',
+        'phone_number',
+        'total_price',
+        'created_at',
+        'status',
+        'payment_method',
+        'delivery_method',
+        'quantity',
+        'delivery_time',
     )
     list_filter = ('status', 'payment_method', 'delivery_method')
-    search_fields = ('phone_number', 'order_name', 'ordered_by')
+    search_fields = ('phone_number', 'order_name', 'ordered_by', 'received_by')
+
+    readonly_fields = ('created_at',)  # Сделаем created_at только для чтения
+
     fieldsets = (
-        (None, {
-            'fields': ('order_name', 'phone_number', 'status', 'payment_method', 'delivery_method', 'quantity')
+        ('Основная информация', {
+            'fields': (
+                'order_name',
+                'phone_number',
+                'status',
+                'payment_method',
+                'delivery_method',
+                'quantity',
+                'items',
+                'total_price',
+            )
         }),
         ('Доставка', {
-            'fields': ('delivery_time', 'delivery_address', 'delivery_cost', 'discount', 'delivery_duration')
+            'fields': (
+                'delivery_time',
+                'delivery_address',
+                'delivery_cost',
+                'discount',
+                'delivery_duration',
+            )
         }),
-        ('Заказчик', {
-            'fields': ('ordered_by', 'received_by')
+        ('Участники', {
+            'fields': (
+                'ordered_by',
+                'received_by',
+            )
         }),
-        ('Прочее', {
-            'fields': ('items', 'total_price', 'created_at')
+        ('Системная информация', {
+            'fields': (
+                'created_at',
+            )
         }),
     )
-
-
-
-
-
-class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'phone_number', 'total_price', 'status', 'created_at')
-    list_filter = ('status', 'created_at')
-    search_fields = ('phone_number',)
-
-admin.site.register(Order, OrderAdmin)
