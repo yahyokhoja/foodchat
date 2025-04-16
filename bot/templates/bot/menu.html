@@ -9,6 +9,8 @@
       --bg-color: #ffffff;
       --text-color: #000000;
       --item-bg: #f9f9f9;
+      --link-color: #4CAF50;
+      --link-hover-glow: #4CAF50;
     }
 
     body.dark {
@@ -22,6 +24,34 @@
       color: var(--text-color);
       font-family: sans-serif;
       padding: 20px;
+    }
+
+    /* Стилизация ссылок */
+    a {
+      color: var(--link-color);
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    a:hover {
+      color: white;
+      text-shadow: 0 0 5px var(--link-hover-glow), 0 0 10px var(--link-hover-glow), 0 0 20px var(--link-hover-glow);
+    }
+
+    nav {
+      margin-bottom: 20px;
+    }
+
+    nav a {
+      margin-right: 15px;
+      padding: 5px 10px;
+      border-radius: 4px;
+    }
+
+    nav a:hover {
+      background-color: rgba(76, 175, 80, 0.1);
     }
 
     .menu-item {
@@ -81,9 +111,15 @@
 </head>
 <body>
 
-<!-- Вставка header.html -->
-{% include 'bot/header.html' %}
+<!-- 🔗 Навигационное меню -->
+<nav>
+  <a href="/">🏠 Асосӣ</a>
+  <a href="/menu">📋 Меню</a>
+  <a href="/contact">📞 Тамос</a>
+  <button onclick="toggleTheme()">🌙 Тема</button>
+</nav>
 
+<!-- 🔧 Панель управления -->
 <div class="controls">
   <div>
     <label for="sort">Сортировать:</label>
@@ -95,6 +131,7 @@
   </div>
 </div>
 
+<!-- 🍽️ Меню блюд -->
 <div id="menu">
   {% for dish in dishes %}
     <div class="menu-item" data-price="{{ dish.price }}">
@@ -107,12 +144,14 @@
   {% endfor %}
 </div>
 
+<!-- 🛒 Корзина -->
 <div class="cart">
   <h2>🛒 Корзина</h2>
   <ul id="cart-items"></ul>
   <button onclick="confirmOrder()">✅ Оформить заказ</button>
 </div>
 
+<!-- 🔔 Всплывающее сообщение -->
 <div id="popup"></div>
 
 <script>
