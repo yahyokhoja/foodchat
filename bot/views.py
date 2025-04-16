@@ -1,17 +1,29 @@
 # bot/views.py
 from django.http import JsonResponse
 from django.shortcuts import render
+from rest_framework.decorators import api_view
 
-def index(request):
-    # Это представление рендерит шаблон 'index.html'
-    return render(request, "bot/index.html")
-# views.py
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Order
-
+from .serializers import DishSerializer
 from .models import Dish
+
+
+def index(request):
+    # Это представление рендерит шаблон 'index.html'
+    return render(request, "bot/index.html")
+
+
+@api_view(['GET'])
+def dish_list(request):
+    dishes = Dish.objects.filter(available=True)
+    serializer = DishSerializer(dishes, many=True, context={'request': request})
+    return Response(serializer.data)
+
+
 
 def menu(request):
     dishes = Dish.objects.all()
@@ -51,3 +63,21 @@ def chatbot_response(request):
 def chat_page(request):
     # Это представление рендерит шаблон 'chat_page.html'
     return render(request, "bot/chat_page.html")
+
+from django.shortcuts import render
+
+def cart(request):
+    return render(request, 'bot/cart.html')
+
+from django.shortcuts import render
+
+def orders(request):
+    return render(request, 'bot/orders.html')
+
+from django.shortcuts import render
+
+def profile(request):
+    return render(request, 'bot/profile.html')
+
+
+

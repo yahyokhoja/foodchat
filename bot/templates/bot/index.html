@@ -11,129 +11,35 @@
             color: #333;
             margin: 0;
             padding: 0;
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
         }
 
-        h1 {
-            color: #3498db;
-            margin-bottom: 20px;
-        }
-
-        p {
-            font-size: 18px;
-            color: #555;
-        }
-
-        a {
-            text-decoration: none;
-            font-size: 18px;
-            color: #fff;
-            background-color: #3498db;
-            padding: 10px 20px;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        a:hover {
-            background-color: #2980b9;
-        }
-
-        /* Стили для всплывающего окна */
-        #popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            width: 80%;
-            max-width: 500px;
-        }
-
-        #popup h2 {
-            margin: 0 0 20px;
-            font-size: 24px;
-            color: #3498db;
-        }
-
-        #popup p {
-            font-size: 16px;
-            color: #555;
-        }
-
-        #popup button {
+        header {
             background-color: #3498db;
             color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        #popup button:hover {
-            background-color: #2980b9;
-        }
-
-        /* Фон для затемнения */
-        #popup-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-        }
-
-        /* Стили для меню */
-        .menu-item {
-            background-color: #fff;
-            margin: 10px 0;
-            padding: 15px;
-            border-radius: 5px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .menu-item input {
-            width: 60px;
-            padding: 5px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        .menu-item button {
-            background-color: #2ecc71;
+        header nav a {
             color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: bold;
         }
 
-        .menu-item button:hover {
-            background-color: #27ae60;
+        header nav a:hover {
+            text-decoration: underline;
         }
 
-        /* Стиль для формы регистрации */
-        #registration-form {
-            display: none;
+        .container {
+            padding: 40px;
             text-align: center;
-            margin-top: 20px;
+        }
+
+        #registration-form {
+            margin-top: 30px;
         }
 
         #registration-form input {
@@ -141,7 +47,7 @@
             margin: 10px;
             border-radius: 5px;
             border: 1px solid #ccc;
-            width: 200px;
+            width: 250px;
         }
 
         #registration-form button {
@@ -151,185 +57,174 @@
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s;
         }
 
         #registration-form button:hover {
             background-color: #2980b9;
         }
 
-        /* Кнопка входа/выхода */
         #login-logout-btn {
+            background-color: white;
+            color: #3498db;
+            padding: 8px 16px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #login-logout-btn:hover {
+            background-color: #ecf0f1;
+        }
+
+        #welcome-message {
             margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #3498db;
+            font-size: 18px;
+            color: #2c3e50;
+        }
+
+        #dishes-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .dish-card {
+            width: 300px;
+            margin: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: white;
+        }
+
+        .dish-card img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .dish-card h3 {
+            margin-top: 10px;
+        }
+
+        .dish-card p {
+            margin: 10px 0;
+        }
+
+        .dish-card button {
+            padding: 8px 12px;
+            background: #3498db;
             color: white;
+            border: none;
             border-radius: 5px;
             cursor: pointer;
         }
 
-        #login-logout-btn:hover {
-            background-color: #2980b9;
+        .dish-card button:hover {
+            background: #2980b9;
         }
     </style>
 </head>
 <body>
 
-    <h1>Хуш омадед ба боти фармоиши хӯрок!</h1>
-    <p><a href="javascript:void(0);" onclick="openPopup()">Ба сӯҳбат гузаред</a></p>
+    <header>
+        <div><strong>🍽 Фармоиши хӯрок</strong></div>
+        <nav>
+            <a href="/">Саҳифаи асосӣ</a>
+            <a href="/admin/">Админ</a>
+            <a href="/menu/">Меню</a>
+            <a href="/api/">API</a>
+            <button id="login-logout-btn" onclick="toggleLoginLogout()">Войти</button>
+        </nav>
+    </header>
 
-    <!-- Добавим ссылки на другие страницы -->
-    <p><a href="/admin/">Админ панел</a></p>  <!-- Ссылка на админку -->
-    <p><a href="/">Главная страница</a></p>    <!-- Ссылка на главную страницу -->
+    <div class="container">
+        <h1>Хуш омадед!</h1>
+        <div id="welcome-message"></div>
 
-    <!-- Кнопка Войти/Выйти -->
-    <button id="login-logout-btn" onclick="toggleLoginLogout()">Войти</button>
-
-    <!-- Всплывающее окно -->
-    <div id="popup-overlay"></div>
-    <div id="popup">
-        <h2>🤖 Бот барои фармоиши хӯрок</h2>
-        <p>Чӣ хӯрок мехоҳед фармоиш диҳед?</p>
-        
-        <!-- Меню с блюдами -->
-        <div class="menu-item">
-            <span>Пицца</span>
-            <input type="number" id="pizza-qty" value="0" min="0" />
-            <button onclick="addToCart('Pizza', document.getElementById('pizza-qty').value)">Добавить в корзину</button>
+        <div id="registration-form" style="display: none;">
+            <h3>Регистрация</h3>
+            <p>Номери телефони худро ворид кунед:</p>
+            <input type="text" id="phone-number" placeholder="Номери телефон" />
+            <br>
+            <button onclick="registerUser()">Сабт кардан</button>
         </div>
-        <div class="menu-item">
-            <span>Шашлик</span>
-            <input type="number" id="shashlik-qty" value="0" min="0" />
-            <button onclick="addToCart('Shashlik', document.getElementById('shashlik-qty').value)">Добавить в корзину</button>
-        </div>
-        <div class="menu-item">
-            <span>Манту</span>
-            <input type="number" id="manty-qty" value="0" min="0" />
-            <button onclick="addToCart('Manty', document.getElementById('manty-qty').value)">Добавить в корзину</button>
-        </div>
-        <div class="menu-item">
-            <span>Шӯрбо</span>
-            <input type="number" id="shurbo-qty" value="0" min="0" />
-            <button onclick="addToCart('Shurbo', document.getElementById('shurbo-qty').value)">Добавить в корзину</button>
-        </div>
-
-        <!-- Кнопка оформления заказа -->
-        <div id="cart-summary"></div>
-        <button onclick="placeOrder()">Оформить заказ</button>
-
-        <button onclick="closePopup()">Закрыть</button>
     </div>
 
-    <!-- Форма регистрации пользователя -->
-    <div id="registration-form">
-        <h3>Регистрация</h3>
-        <p>Пожалуйста, введите свой номер телефона для регистрации:</p>
-        <input type="text" id="phone-number" placeholder="Ваш номер телефона" />
-        <button onclick="registerUser()">Зарегистрироваться</button>
-    </div>
+    <h2>Меню</h2>
+    <div id="dishes-container"></div>
 
     <script>
-        // Проверяем, есть ли зарегистрированный пользователь
+        async function fetchDishes() {
+            try {
+                const response = await fetch('/api/dishes/');
+                const dishes = await response.json();
+                const container = document.getElementById('dishes-container');
+                container.innerHTML = '';
+
+                dishes.forEach(dish => {
+                    const card = document.createElement('div');
+                    card.classList.add('dish-card');
+                    card.innerHTML = `
+                        <img src="${dish.image}" alt="${dish.name}">
+                        <h3>${dish.name}</h3>
+                        <p>${dish.description}</p>
+                        <strong>${dish.price} сомонӣ</strong><br><br>
+                        <button onclick='addToCart(${JSON.stringify(dish)})'>Ба сабад</button>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Хатогӣ ҳангоми боркунии меню:', error);
+            }
+        }
+
+        function addToCart(dish) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart.push(dish);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert(`${dish.name} ба сабад илова шуд.`);
+        }
+
         function checkLoginStatus() {
             const phoneNumber = localStorage.getItem('phoneNumber');
             const loginLogoutBtn = document.getElementById('login-logout-btn');
+            const welcomeMsg = document.getElementById('welcome-message');
 
             if (phoneNumber) {
                 loginLogoutBtn.textContent = 'Выйти';
+                welcomeMsg.innerHTML = `Салом, <strong>${phoneNumber}</strong>!`;
             } else {
                 loginLogoutBtn.textContent = 'Войти';
+                welcomeMsg.innerHTML = '';
             }
         }
 
-        // Открытие всплывающего окна
-        function openPopup() {
-            const phoneNumber = localStorage.getItem('phoneNumber');
-            if (!phoneNumber) {
-                document.getElementById("registration-form").style.display = "block";
-            } else {
-                document.getElementById("popup").style.display = "block";
-                document.getElementById("popup-overlay").style.display = "block";
-            }
-        }
-
-        // Закрытие всплывающего окна
-        function closePopup() {
-            document.getElementById("popup").style.display = "none";
-            document.getElementById("popup-overlay").style.display = "none";
-        }
-
-        let cart = [];
-
-        // Добавление товара в корзину
-        function addToCart(dish, qty) {
-            if (qty > 0) {
-                cart.push({ dish: dish, qty: qty });
-                updateCart();
-            }
-        }
-
-        // Обновление корзины
-        function updateCart() {
-            const cartSummary = document.getElementById("cart-summary");
-            cartSummary.innerHTML = "<h3>Ваша корзина:</h3>";
-
-            if (cart.length === 0) {
-                cartSummary.innerHTML += "<p>Корзина пуста</p>";
-            } else {
-                cart.forEach(item => {
-                    cartSummary.innerHTML += `<p>${item.dish} — ${item.qty} шт.</p>`;
-                });
-            }
-        }
-
-        // Оформление заказа
-        function placeOrder() {
-            if (cart.length === 0) {
-                alert("Ваша корзина пуста!");
-                return;
-            }
-
-            let orderDetails = "Ваш заказ:\n";
-            cart.forEach(item => {
-                orderDetails += `${item.dish} — ${item.qty} шт.\n`;
-            });
-
-            alert(orderDetails);
-            cart = [];
-            updateCart();
-            closePopup();
-        }
-
-        // Регистрация нового пользователя
-        function registerUser() {
-            const phoneNumber = document.getElementById('phone-number').value;
-            if (phoneNumber) {
-                localStorage.setItem('phoneNumber', phoneNumber);
-                alert("Вы успешно зарегистрированы!");
-                document.getElementById("registration-form").style.display = "none";
-                document.getElementById("popup").style.display = "block";
-                document.getElementById("popup-overlay").style.display = "block";
-                checkLoginStatus(); // Обновляем статус кнопки
-            } else {
-                alert("Пожалуйста, введите свой номер телефона.");
-            }
-        }
-
-        // Вход/Выход
         function toggleLoginLogout() {
             const phoneNumber = localStorage.getItem('phoneNumber');
             if (phoneNumber) {
                 localStorage.removeItem('phoneNumber');
-                alert("Вы вышли из системы.");
-                checkLoginStatus(); // Обновляем статус кнопки
+                alert("Шумо аз система баромадед.");
+                location.reload();
             } else {
-                openPopup(); // Открываем окно регистрации
+                document.getElementById("registration-form").style.display = "block";
             }
         }
 
-        // Проверяем статус входа при загрузке страницы
-        checkLoginStatus();
-    </script>
+        function registerUser() {
+            const phoneNumber = document.getElementById('phone-number').value;
+            if (phoneNumber) {
+                localStorage.setItem('phoneNumber', phoneNumber);
+                alert("Шумо бомуваффақият сабтином шудед!");
+                window.location.href = "/menu/";
+            } else {
+                alert("Лутфан, номери телефони худро ворид кунед.");
+            }
+        }
 
+        checkLoginStatus();
+        fetchDishes();
+    </script>
 </body>
 </html>

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2>🛒 Корзина</h2>
+  <p>Здесь будет отображаться содержимое корзины.</p>
+  <ul id="cart-items"></ul>
+  <button class="btn btn-success mt-3" onclick="confirmOrder()">✅ Оформить заказ</button>
+</div>
+{% endblock %}

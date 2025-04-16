@@ -1,0 +1,23 @@
+<!-- header.html -->
+{% load static %}
+<header class="d-flex justify-content-between align-items-center py-3 px-4 border-bottom bg-light">
+  <h1 class="fs-3 m-0">🍽️ Меню хӯроки мо</h1>
+  header>
+  <div><strong>🍽 Фармоиши хӯрок</strong></div>
+  <nav>
+      <a href="/">Саҳифаи асосӣ</a>
+      <a href="/admin/">Админ</a>
+      <a href="/menu/">Меню</a>
+      <a href="/api/">API</a>
+      <button id="login-logout-btn" onclick="toggleLoginLogout()">Войти</button>
+  </nav>
+</header>
+
+  <nav class="d-flex gap-3 align-items-center">
+    <a href="{% url 'menu' %}" class="text-decoration-none text-dark fw-semibold">Меню</a>
+   
+    <a href="{% url 'orders' %}" class="text-decoration-none text-dark fw-semibold">📜 Заказҳо</a>
+    <a href="{% url 'profile' %}" class="text-decoration-none text-dark fw-semibold">👤 Профил</a>
+    <button class="btn btn-outline-secondary ms-3" onclick="toggleTheme()">🌗 Тема</button>
+  </nav>
+</header>
