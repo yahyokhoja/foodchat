@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Чат-бот: Заказ еды</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f8f8f8;
+            padding: 20px;
+        }
+
+        #chat-box {
+            max-width: 600px;
+            margin: auto;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #fff;
+        }
+
+        #bot-response {
+            background: #f1f1f1;
+            padding: 15px;
+            border-radius: 10px;
+            white-space: pre-wrap;
+        }
+
+        #user-input {
+            display: flex;
+            margin-top: 10px;
+            gap: 10px;
+        }
+
+        #user-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #user-input button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #user-input button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-box">
+        <h2>Чат-бот: Заказ еды</h2>
+
+        {% if bot_response %}
+            <div id="bot-response">
+                {{ bot_response|safe }}
+            </div>
+        {% endif %}
+
+        <form id="user-input" method="get" action="">
+            <input type="text" name="message" placeholder="Паёматонро нависед..." required>
+            <button type="submit">Фиристодан</button>
+        </form>
+    </div>
+</body>
+</html>
