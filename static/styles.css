@@ -1,0 +1,99 @@
+/* Общие стили для header */
+header {
+  background-color: #f8f9fa; /* Светлый фон для шапки */
+  border-bottom: 1px solid #dee2e6; /* Тонкая линия внизу */
+}
+
+header .fs-3 {
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+header .nav-link {
+  color: #495057;
+  text-decoration: none;
+  padding: 8px 15px;
+  font-weight: 500;
+}
+
+header .nav-link:hover {
+  color: #007bff; /* Синий цвет при наведении */
+  text-decoration: underline;
+}
+
+/* Стили для кнопки Войти */
+#login-logout-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#login-logout-btn:hover {
+  background-color: #0056b3; /* Темный синий при наведении */
+}
+
+/* Стили для навигационной панели */
+nav {
+  background-color: #f8f9fa; /* Светлый фон для панели */
+  padding: 10px 20px;
+  border-bottom: 1px solid #dee2e6; /* Линия снизу */
+}
+
+nav .nav-link {
+  color: #495057;
+  font-weight: 600;
+}
+
+nav .nav-link:hover {
+  color: #007bff; /* Синий цвет при наведении */
+}
+
+nav button {
+  border-radius: 5px;
+  padding: 8px 12px;
+  font-weight: 500;
+}
+
+nav button:hover {
+  background-color: #0056b3; /* Темный синий при наведении */
+  color: white;
+}
+
+/* Темная тема для переключения */
+body.dark header, body.dark nav {
+  background-color: #121212;
+  color: white;
+}
+
+body.dark header .nav-link {
+  color: white;
+}
+
+body.dark header .nav-link:hover {
+  color: #007bff;
+}
+
+body.dark #login-logout-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+body.dark #login-logout-btn:hover {
+  background-color: #0056b3;
+}
+
+body.dark nav .nav-link {
+  color: white;
+}
+
+body.dark nav button {
+  background-color: #007bff;
+  color: white;
+}
+
+body.dark nav button:hover {
+  background-color: #0056b3;
+}
