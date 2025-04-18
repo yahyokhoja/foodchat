@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import Order
 from .models import Dish
 
-admin.site.register(Dish)
+
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
@@ -57,3 +57,14 @@ class OrderAdmin(admin.ModelAdmin):
             )
         }),
     )
+
+
+
+@admin.register(Dish)
+class DishAdmin(admin.ModelAdmin):
+    list_display = ('name', 'price', 'available', 'category')
+    list_filter = ('available', 'category')
+    search_fields = ('name', 'description')
+
+
+

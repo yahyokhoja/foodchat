@@ -9,7 +9,7 @@ from django.contrib.auth.views import LogoutView
 
 
 urlpatterns = [
-  
+
     path('menu/', views.menu, name='menu'),
     path('cart/', views.cart, name='cart'),
     path('orders/', views.orders, name='orders'),
@@ -18,3 +18,17 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(next_page='/'), name='logout'),
 
 ]
+
+
+def search(request):
+    query = request.GET.get('q', '')
+    category = request.GET.get('category', '')
+    results = Dish.objects.all()
+
+    if query:
+        results = results.filter(name__icontains=query)
+
+    if category:
+        results = results.filter(category__iexact=category)
+
+    return render(request, 'bot/search_results.html', {'results': results, 'query': query})

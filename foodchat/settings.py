@@ -6,7 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'your-secret-key'
 DEBUG = True
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'yahuokhoja.pythonanywhere.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -61,8 +61,9 @@ LANGUAGE_CODE = 'ru-ru'
 TIME_ZONE = 'Asia/Dushanbe'
 USE_I18N = True
 USE_TZ = True
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'

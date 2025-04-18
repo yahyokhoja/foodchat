@@ -1,10 +1,10 @@
+
 {% extends 'bot/base.html' %}
 {% load static %}
 
 {% block title %}Фармоиши хӯрок{% endblock %}
 
 {% block content %}
-
 
 <div class="container">
     <h1>Хуш омадед!</h1>
@@ -19,53 +19,65 @@
     </div>
 </div>
 
-<h2 class="text-center" style="text-align: center;">Меню</h2>
-<div id="dishes-container">
-    {% for dish in dishes %}
-    <div class="dish-card">
-        <img src="{{ dish.image.url }}" alt="{{ dish.name }}">
-        <h3>{{ dish.name }}</h3>
-        <p>{{ dish.description }}</p>
-        <strong>{{ dish.price }} сомонӣ</strong><br><br>
-        <button onclick='addToCart({ 
-            "id": "{{ dish.id }}", 
-            "name": "{{ dish.name }}", 
-            "description": "{{ dish.description }}", 
-            "price": "{{ dish.price }}", 
-            "image": "{{ dish.image.url }}" 
-        })'>Ба сабад</button>
+<h2 class="text-center">Меню</h2>
+
+<!-- Карусель вместо карточек -->
+<div id="dishes-container" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        {% for dish in dishes %}
+        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+            <div class="dish-card">
+                <img src="{{ dish.image.url }}" alt="{{ dish.name }}" class="d-block w-100">
+                <h3>{{ dish.name }}</h3>
+                <p>{{ dish.description }}</p>
+                <strong>{{ dish.price }} сомонӣ</strong><br><br>
+                <button onclick='addToCart({
+                    "id": "{{ dish.id }}",
+                    "name": "{{ dish.name }}",
+                    "description": "{{ dish.description }}",
+                    "price": "{{ dish.price }}",
+                    "image": "{{ dish.image.url }}"
+                })'>Ба сабад</button>
+            </div>
+        </div>
+        {% empty %}
+        <p>Меню дар айни ҳол холӣ аст.</p>
+        {% endfor %}
     </div>
-    {% empty %}
-    <p>Меню дар айни ҳол холӣ аст.</p>
-    {% endfor %}
+
+    <!-- Кнопки для навигации по карусели -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#dishes-container" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Предыдущий</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#dishes-container" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Следующий</span>
+    </button>
 </div>
 
 <style>
     #dishes-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 20px;
         margin-top: 30px;
+        max-width: 100%;
+        height: auto;
     }
 
     .dish-card {
-        width: 300px;
         padding: 15px;
         border: 1px solid #ccc;
         border-radius: 10px;
         background-color: white;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         transition: transform 0.2s ease;
-    }
-
-    .dish-card:hover {
-        transform: scale(1.02);
+        text-align: center;
+        max-width: 300px;
+        margin: auto;
     }
 
     .dish-card img {
         width: 100%;
-        height: 200px;
+        height: auto;
         object-fit: cover;
         border-radius: 10px;
     }
@@ -90,6 +102,30 @@
 
     .dish-card button:hover {
         background: #2980b9;
+    }
+
+    /* Адаптивность для мобильных устройств */
+    @media (max-width: 768px) {
+        .carousel-item {
+            text-align: center;
+        }
+
+        .dish-card {
+            max-width: 80%;
+            margin: 10px auto;
+        }
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            background-color: #3498db;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .dish-card {
+            max-width: 90%;
+            margin: 10px auto;
+        }
     }
 </style>
 
@@ -139,4 +175,5 @@
 
     checkLoginStatus();
 </script>
+
 {% endblock %}

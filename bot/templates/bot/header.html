@@ -1,138 +1,249 @@
-<!-- includes/header.html -->
+
 {% load static %}
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
 <style>
+  :root {
+    --main-color: #3498db;
+    --bg-light: #ffffff;
+    --bg-dark: #1e1e1e;
+    --text-light: #2c3e50;
+    --text-dark: #f0f0f0;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+  }
+
   header {
-      background-color: #3498db;
-      color: white;
-      padding: 15px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
+    background-color: var(--main-color);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    flex-wrap: wrap;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
   header h1 {
-      margin: 0;
-      font-size: 24px;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 
-  header nav a {
-      color: white;
-      text-decoration: none;
-      margin: 0 10px;
-      font-weight: bold;
+  nav {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
   }
 
-  header nav a:hover {
-      text-decoration: underline;
+  nav a,
+  nav span {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease, transform 0.2s;
+  }
+
+  nav a:hover {
+    transform: translateY(-2px);
+    color: #ecf0f1;
   }
 
   #login-logout-btn {
-      background-color: white;
-      color: #3498db;
-      padding: 8px 16px;
-      border-radius: 5px;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
+    background-color: white;
+    color: var(--main-color);
+    border: none;
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
 
   #login-logout-btn:hover {
-      background-color: #ecf0f1;
+    background-color: #ecf0f1;
+    transform: scale(1.05);
   }
 
   .sub-nav {
-      background-color: #ecf0f1;
-      padding: 10px 20px;
-      display: flex;
-      gap: 15px;
-      align-items: center;
+    background-color: #f4f4f4;
+    padding: 10px 20px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    border-top: 1px solid #ddd;
+    flex-wrap: wrap;
+    transition: background-color 0.3s ease;
   }
 
-  .sub-nav a {
-      text-decoration: none;
-      color: #2c3e50;
-      font-weight: 600;
-  }
-
-  .sub-nav a:hover {
-      text-decoration: underline;
-  }
-
+  .sub-nav a,
   .sub-nav button {
-      background: none;
-      border: 1px solid #ccc;
-      padding: 6px 12px;
-      border-radius: 5px;
-      cursor: pointer;
+    text-decoration: none;
+    color: var(--text-light);
+    background: none;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.3s ease, transform 0.2s ease;
   }
 
+  .sub-nav a:hover,
   .sub-nav button:hover {
-      background-color: #ddd;
+    color: var(--main-color);
+    transform: translateY(-1px);
   }
-  <style>
-    .dark-theme {
-      background-color: #121212;
-      color: #f0f0f0;
-    }
-  
-    .dark-theme header {
-      background-color: #1e1e1e;
-      color: #fff;
-    }
-  
-    .dark-theme .sub-nav {
-      background-color: #2c2c2c;
-    }
-  
-    .dark-theme .sub-nav a {
-      color: #f0f0f0;
-    }
-  
-    .dark-theme #login-logout-btn {
-      background-color: #f0f0f0;
-      color: #1e1e1e;
-    }
-  
-    .dark-theme #login-logout-btn:hover {
-      background-color: #ccc;
-    }
-  
-    .dark-theme a {
-      color: #4da6ff;
-    }
-  
-    .dark-theme a:hover {
-      text-decoration: underline;
-    }
- 
-  
 
+  /* Dark Theme */
+  .dark-theme {
+    background-color: var(--bg-dark);
+    color: var(--text-dark);
+  }
 
+  .dark-theme header {
+    background-color: #222;
+    color: #f0f0f0;
+  }
 
+  .dark-theme nav a,
+  .dark-theme nav span {
+    color: #f0f0f0;
+  }
+
+  .dark-theme .sub-nav {
+    background-color: #333;
+  }
+
+  .dark-theme .sub-nav a,
+  .dark-theme .sub-nav button {
+    color: #ddd;
+  }
+
+  .dark-theme #login-logout-btn {
+    background-color: #f0f0f0;
+    color: #1e1e1e;
+  }
+
+  /* Burger menu */
+  .burger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 4px;
+  }
+
+  .burger div {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    transition: 0.3s;
+  }
+
+  .mobile-nav {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .mobile-nav.active {
+    display: flex;
+  }
+
+  @media (max-width: 768px) {
+    nav {
+      display: none;
+    }
+
+    .burger {
+      display: flex;
+    }
+
+    .mobile-nav a {
+      color: white;
+      padding: 10px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .mobile-nav a:hover {
+      color: #ddd;
+    }
+  }
 </style>
 
 <header>
-  <h1>🍽️ Меню </h1>
-  
+
+
+  <div class="burger" onclick="toggleMobileMenu()">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+
   <nav>
-      <a href="/">Саҳифаи асосӣ</a>
-      <a href="/admin/">Админ</a>
-      <a href="/menu/">Меню</a>
-      <a href="/api/">API</a>
-      {% if user.is_authenticated %}
-      <span>Салом, {{ user.username }}!</span>
-      <a href="{% url 'logout' %}" class="btn btn-light text-primary ms-2">Выйти</a>
-  {% else %}
-      <button id="login-logout-btn" onclick="toggleLoginLogout()">Войти</button>
-  {% endif %}
-  
+    <a href="/"><i class="fas fa-home"></i> Асосӣ</a>
+    <a href="/admin/"><i class="fas fa-tools"></i> Админ</a>
+    <a href="/menu/"><i class="fas fa-list"></i> Меню</a>
+
+    {% if user.is_authenticated %}
+      <span><i class="fas fa-user"></i> {{ user.username }}</span>
+      <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+    {% else %}
+      <button id="login-logout-btn" onclick="toggleLoginLogout()">
+        <i class="fas fa-sign-in-alt"></i> Войти
+      </button>
+    {% endif %}
   </nav>
+
+  <div class="mobile-nav" id="mobileNav">
+    <a href="/"><i class="fas fa-home"></i> Асосӣ</a>
+    <a href="/admin/"><i class="fas fa-tools"></i> Админ</a>
+    <a href="/menu/"><i class="fas fa-list"></i> Меню</a>
+    {% if user.is_authenticated %}
+      <a href="#"><i class="fas fa-user"></i> {{ user.username }}</a>
+      <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+    {% else %}
+      <a href="#"><i class="fas fa-sign-in-alt"></i> Войти</a>
+    {% endif %}
+  </div>
 </header>
 
 <nav class="sub-nav">
-  <a href="{% url 'menu' %}">📋 Меню</a>
-  <a href="{% url 'orders' %}">📜 Фармоиш</a>
-  <a href="{% url 'profile' %}">👤 Профил</a>
-  <button onclick="toggleTheme()">🌗 Тема</button>
+  <a href="{% url 'orders' %}"><i class="fas fa-scroll"></i> Фармоиш</a>
+  <a href="{% url 'profile' %}"><i class="fas fa-user-circle"></i> Профил</a>
+  <button onclick="toggleTheme()"><i class="fas fa-moon"></i> Тема</button>
 </nav>
+
+<script>
+  function toggleTheme() {
+    document.body.classList.toggle('dark-theme');
+    localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
+  }
+
+  function toggleMobileMenu() {
+    const menu = document.getElementById("mobileNav");
+    menu.classList.toggle("active");
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark-theme');
+    }
+  });
+</script>

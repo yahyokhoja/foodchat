@@ -1,152 +1,151 @@
-<!-- templates/menu.html -->
 {% extends 'bot/base.html' %}
+{% load static %}
 
-{% block title %}Меню{% endblock %}
+{% block title %}Фармоиши хӯрок{% endblock %}
 
 {% block content %}
 
-<div class="controls">
-  <label for="sort">Сортировать:</label>
-  <select id="sort" onchange="sortMenu()">
-    <option value="default">По умолчанию</option>
-    <option value="asc">По возрастанию цены</option>
-    <option value="desc">По убыванию цены</option>
-  </select>
-</div>
+<div class="container my-4">
 
-<div id="menu">
-  {% for dish in dishes %}
-    <div class="menu-item" data-price="{{ dish.price }}">
-      <img src="{{ dish.image.url }}" alt="{{ dish.name }}" style="max-width:50px; max-height:50px;">
-      <span>{{ dish.name }}</span>
-      <span>{{ dish.price }} сомонӣ</span>
-      <input type="number" min="1" value="1">
-      <button onclick="addToCart('{{ dish.name }}', '{{ dish.price }}', this)">➕</button>
+    <div id="welcome-message" class="text-center mb-3"></div>
+
+    <div id="registration-form" class="text-center" style="display: none;">
+        <h3>Регистрация</h3>
+        <input type="text" id="phone-number" placeholder="Номери телефон" class="form-control w-50 mx-auto my-2" />
+        <button class="btn btn-primary" onclick="registerUser()">Сабт кардан</button>
     </div>
-  {% endfor %}
+
+    <!-- Кнопка корзины -->
+    <div class="text-end me-4">
+        <button class="btn btn-outline-success position-relative">
+            <i class="fas fa-shopping-cart"></i> Корзина
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cart-count">
+                0
+            </span>
+        </button>
+    </div>
 </div>
 
-<div class="cart">
-  <h2>🛒 Корзина</h2>
-  <ul id="cart-items"></ul>
-  <button onclick="confirmOrder()">✅ Оформить заказ</button>
+<h2 class="text-center my-4">Меню</h2>
+
+<!-- Карусель -->
+<div id="dishesCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        {% for dish in dishes %}
+            {% if forloop.first or forloop.counter0|divisibleby:3 %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <div class="container">
+                        <div class="row justify-content-center">
+            {% endif %}
+
+            <div class="col-md-4 mb-3">
+                <div class="card h-100 shadow">
+                    <img src="{{ dish.image.url }}" class="card-img-top" alt="{{ dish.name }}">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{ dish.name }}</h5>
+                        <p class="card-text">{{ dish.description }}</p>
+                        <strong>{{ dish.price }} сомонӣ</strong><br><br>
+                        <button class="btn btn-primary" onclick='addToCart({
+                            "id": "{{ dish.id }}",
+                            "name": "{{ dish.name }}",
+                            "description": "{{ dish.description }}",
+                            "price": "{{ dish.price }}",
+                            "image": "{{ dish.image.url }}"
+                        })'>Ба сабад</button>
+                    </div>
+                </div>
+            </div>
+
+            {% if forloop.counter|divisibleby:3 or forloop.last %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% empty %}
+            <p class="text-center">Меню дар айни ҳол холӣ аст.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Навигация -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#dishesCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#dishesCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
+    </button>
 </div>
 
-<script>
-  const menuContainer = document.getElementById('menu');
-  const cartList = document.getElementById('cart-items');
-
-  function sortMenu() {
-    const sortType = document.getElementById('sort').value;
-    const items = Array.from(menuContainer.children);
-
-    if (sortType === 'asc') {
-      items.sort((a, b) => parseFloat(a.dataset.price) - parseFloat(b.dataset.price));
-    } else if (sortType === 'desc') {
-      items.sort((a, b) => parseFloat(b.dataset.price) - parseFloat(a.dataset.price));
+<!-- Стили -->
+<style>
+    .card img {
+        height: 200px;
+        object-fit: cover;
     }
 
-    items.forEach(item => menuContainer.appendChild(item));
-  }
-
-  function addToCart(name, price, btn) {
-    const quantity = parseInt(btn.previousElementSibling.value) || 1;
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-    const existing = cart.find(item => item.name === name);
-    if (existing) {
-      existing.qty += quantity;
-    } else {
-      cart.push({ name, price, qty: quantity });
-    }
-
-    localStorage.setItem('cart', JSON.stringify(cart));
-    renderCart();
-  }
-
-  function renderCart() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    cartList.innerHTML = cart.map((item, index) =>
-      `<li>
-        ${item.name} — ${item.qty} шт. = ${item.qty * item.price} сомонӣ
-        <button onclick="updateQuantity(${index}, 'increase')">➕</button>
-        <button onclick="updateQuantity(${index}, 'decrease')">➖</button>
-        <button onclick="removeItem(${index})">❌</button>
-      </li>`
-    ).join('');
-  }
-
-  function updateQuantity(index, action) {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    if (action === 'increase') {
-      cart[index].qty += 1;
-    } else if (action === 'decrease' && cart[index].qty > 1) {
-      cart[index].qty -= 1;
-    }
-    localStorage.setItem('cart', JSON.stringify(cart));
-    renderCart();
-  }
-
-  function removeItem(index) {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    cart.splice(index, 1);
-    localStorage.setItem('cart', JSON.stringify(cart));
-    renderCart();
-  }
-
-  function confirmOrder() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-    if (cart.length === 0) {
-      showPopup("Корзина пуста!");
-      return;
-    }
-
-    const orderData = {
-      customer_name: "Гость",
-      items: cart.map(item => ({
-        name: item.name,
-        quantity: item.qty,
-        price: item.price
-      }))
-    };
-
-    fetch('/api/orders/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': getCookie('csrftoken')
-      },
-      body: JSON.stringify(orderData)
-    })
-    .then(response => response.json())
-    .then(data => {
-      showPopup("🎉 Заказ оформлен!");
-      localStorage.removeItem('cart');
-      renderCart();
-    })
-    .catch(err => {
-      console.error(err);
-      showPopup("❌ Ошибка при заказе");
-    });
-  }
-
-  function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-      const cookies = document.cookie.split(';');
-      for (let cookie of cookies) {
-        cookie = cookie.trim();
-        if (cookie.startsWith(name + '=')) {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
+    @media (max-width: 768px) {
+        .carousel-inner .col-md-4 {
+            flex: 0 0 100%;
+            max-width: 100%;
         }
-      }
     }
-    return cookieValue;
-  }
+</style>
 
-  renderCart();
+<!-- Скрипты -->
+<script>
+    function addToCart(dish) {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cart.push(dish);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
+        alert(`${dish.name} ба сабад илова шуд.`);
+    }
+
+    function updateCartCount() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const counter = document.getElementById('cart-count');
+        if (counter) counter.textContent = cart.length;
+    }
+
+    function checkLoginStatus() {
+        const phoneNumber = localStorage.getItem('phoneNumber');
+        const loginLogoutBtn = document.getElementById('login-logout-btn');
+        const welcomeMsg = document.getElementById('welcome-message');
+
+        if (phoneNumber) {
+            if (loginLogoutBtn) loginLogoutBtn.textContent = 'Выйти';
+            welcomeMsg.innerHTML = `Салом, <strong>${phoneNumber}</strong>!`;
+        } else {
+            if (loginLogoutBtn) loginLogoutBtn.textContent = 'Войти';
+            welcomeMsg.innerHTML = '';
+        }
+    }
+
+    function toggleLoginLogout() {
+        const phoneNumber = localStorage.getItem('phoneNumber');
+        if (phoneNumber) {
+            localStorage.removeItem('phoneNumber');
+            alert("Шумо аз система баромадед.");
+            location.reload();
+        } else {
+            document.getElementById("registration-form").style.display = "block";
+        }
+    }
+
+    function registerUser() {
+        const phoneNumber = document.getElementById('phone-number').value;
+        if (phoneNumber) {
+            localStorage.setItem('phoneNumber', phoneNumber);
+            alert("Шумо бомуваффақият сабтином шудед!");
+            window.location.href = "/menu/";
+        } else {
+            alert("Лутфан, номери телефони худро ворид кунед.");
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        checkLoginStatus();
+        updateCartCount();
+    });
 </script>
 
 {% endblock %}
