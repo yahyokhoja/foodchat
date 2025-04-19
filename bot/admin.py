@@ -1,70 +1,26 @@
 from django.contrib import admin
-from .models import Order
-from .models import Dish
+from .models import Order, Dish, OrderDish
 
-
+class OrderDishInline(admin.TabularInline):
+    model = OrderDish
+    extra = 0
+    fields = ('dish', 'quantity')
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
-        'id',
-        'order_name',
-        'phone_number',
-        'total_price',
-        'created_at',
-        'status',
-        'payment_method',
-        'delivery_method',
-        'quantity',
-        'delivery_time',
+        'id', 'phone_number', 'order_name', 'payment_method', 'status',
+        'total_price', 'delivery_method', 'get_total_quantity', 'created_at'
     )
-    list_filter = ('status', 'payment_method', 'delivery_method')
-    search_fields = ('phone_number', 'order_name', 'ordered_by', 'received_by')
+    inlines = [OrderDishInline]
 
-    readonly_fields = ('created_at',)  # Сделаем created_at только для чтения
-
-    fieldsets = (
-        ('Основная информация', {
-            'fields': (
-                'order_name',
-                'phone_number',
-                'status',
-                'payment_method',
-                'delivery_method',
-                'quantity',
-                'items',
-                'total_price',
-            )
-        }),
-        ('Доставка', {
-            'fields': (
-                'delivery_time',
-                'delivery_address',
-                'delivery_cost',
-                'discount',
-                'delivery_duration',
-            )
-        }),
-        ('Участники', {
-            'fields': (
-                'ordered_by',
-                'received_by',
-            )
-        }),
-        ('Системная информация', {
-            'fields': (
-                'created_at',
-            )
-        }),
-    )
-
-
+    def get_total_quantity(self, obj):
+        return sum(od.quantity for od in OrderDish.objects.filter(order=obj))
+    get_total_quantity.short_description = "Всего блюд"
 
 @admin.register(Dish)
 class DishAdmin(admin.ModelAdmin):
-    list_display = ('name', 'price', 'available', 'category')
-    list_filter = ('available', 'category')
-    search_fields = ('name', 'description')
+    list_display = ('id', 'name', 'price', 'category', 'available')
 
 
 

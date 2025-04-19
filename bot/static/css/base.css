@@ -1,0 +1,37 @@
+:root {
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --item-bg: #f9f9f9;
+    --link-color: #4CAF50;
+    --link-hover-glow: #4CAF50;
+  }
+  
+  body.dark-theme {
+    --bg-color: #121212;
+    --text-color: #ffffff;
+    --item-bg: #1e1e1e;
+  }
+  
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: sans-serif;
+    padding: 20px;
+  }
+  
+  a {
+    color: var(--link-color);
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+  
+  a:hover {
+    color: white;
+    text-shadow: 0 0 5px var(--link-hover-glow), 0 0 10px var(--link-hover-glow);
+  }
+  
+  .search-bar {
+    max-width: 600px;
+  }
+  

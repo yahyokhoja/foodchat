@@ -1,51 +1,26 @@
-{% extends 'bot/base.html' %}
 {% load static %}
-
-{% block title %}Фармоиши хӯрок{% endblock %}
+{% include 'bot/header.html' %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/menu.css' %}">
+    {% block title %}Меню{% endblock %}
+{% endblock %}
 
 {% block content %}
-
+<link rel="stylesheet" href="{% static 'css/menu.css' %}">
 <div class="container my-4">
-
-    <div id="welcome-message" class="text-center mb-3"></div>
-
-    <div id="registration-form" class="text-center" style="display: none;">
-        <h3>Регистрация</h3>
-        <input type="text" id="phone-number" placeholder="Номери телефон" class="form-control w-50 mx-auto my-2" />
-        <button class="btn btn-primary" onclick="registerUser()">Сабт кардан</button>
-    </div>
-
     <!-- Кнопка корзины -->
-    <div class="text-end me-4">
-        <button class="btn btn-outline-success position-relative">
-            <i class="fas fa-shopping-cart"></i> Корзина
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cart-count">
-                0
-            </span>
-        </button>
-    </div>
-</div>
-
-<h2 class="text-center my-4">Меню</h2>
-
-<!-- Карусель -->
-<div id="dishesCarousel" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-inner">
+    <!-- Карточки блюд -->
+    <div class="container">
         {% for dish in dishes %}
-            {% if forloop.first or forloop.counter0|divisibleby:3 %}
-                <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                    <div class="container">
-                        <div class="row justify-content-center">
-            {% endif %}
-
-            <div class="col-md-4 mb-3">
-                <div class="card h-100 shadow">
+            <div class="col-md-4 col-12 mb-3">
+                <div class="card h-100 shadow-sm product-card" data-category="{{ dish.category }}">
                     <img src="{{ dish.image.url }}" class="card-img-top" alt="{{ dish.name }}">
                     <div class="card-body text-center">
                         <h5 class="card-title">{{ dish.name }}</h5>
-                        <p class="card-text">{{ dish.description }}</p>
+                        <p class="card-text" id="desc-{{ dish.id }}">{{ dish.description }}</p>
                         <strong>{{ dish.price }} сомонӣ</strong><br><br>
-                        <button class="btn btn-primary" onclick='addToCart({
+                        
+                        <button class="btn btn-primary mt-2" onclick='addToCart({
                             "id": "{{ dish.id }}",
                             "name": "{{ dish.name }}",
                             "description": "{{ dish.description }}",
@@ -55,97 +30,14 @@
                     </div>
                 </div>
             </div>
-
-            {% if forloop.counter|divisibleby:3 or forloop.last %}
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
         {% empty %}
-            <p class="text-center">Меню дар айни ҳол холӣ аст.</p>
+            <p class="text-center">Меню в данный момент пусто.</p>
         {% endfor %}
     </div>
 
-    <!-- Навигация -->
-    <button class="carousel-control-prev" type="button" data-bs-target="#dishesCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#dishesCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
-    </button>
-</div>
-
-<!-- Стили -->
-<style>
-    .card img {
-        height: 200px;
-        object-fit: cover;
-    }
-
-    @media (max-width: 768px) {
-        .carousel-inner .col-md-4 {
-            flex: 0 0 100%;
-            max-width: 100%;
-        }
-    }
-</style>
-
-<!-- Скрипты -->
-<script>
-    function addToCart(dish) {
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        cart.push(dish);
-        localStorage.setItem('cart', JSON.stringify(cart));
-        updateCartCount();
-        alert(`${dish.name} ба сабад илова шуд.`);
-    }
-
-    function updateCartCount() {
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const counter = document.getElementById('cart-count');
-        if (counter) counter.textContent = cart.length;
-    }
-
-    function checkLoginStatus() {
-        const phoneNumber = localStorage.getItem('phoneNumber');
-        const loginLogoutBtn = document.getElementById('login-logout-btn');
-        const welcomeMsg = document.getElementById('welcome-message');
-
-        if (phoneNumber) {
-            if (loginLogoutBtn) loginLogoutBtn.textContent = 'Выйти';
-            welcomeMsg.innerHTML = `Салом, <strong>${phoneNumber}</strong>!`;
-        } else {
-            if (loginLogoutBtn) loginLogoutBtn.textContent = 'Войти';
-            welcomeMsg.innerHTML = '';
-        }
-    }
-
-    function toggleLoginLogout() {
-        const phoneNumber = localStorage.getItem('phoneNumber');
-        if (phoneNumber) {
-            localStorage.removeItem('phoneNumber');
-            alert("Шумо аз система баромадед.");
-            location.reload();
-        } else {
-            document.getElementById("registration-form").style.display = "block";
-        }
-    }
-
-    function registerUser() {
-        const phoneNumber = document.getElementById('phone-number').value;
-        if (phoneNumber) {
-            localStorage.setItem('phoneNumber', phoneNumber);
-            alert("Шумо бомуваффақият сабтином шудед!");
-            window.location.href = "/menu/";
-        } else {
-            alert("Лутфан, номери телефони худро ворид кунед.");
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        checkLoginStatus();
-        updateCartCount();
-    });
-</script>
-
+    <!-- Ссылка на оформление заказа -->
+    <div class="text-center mt-4">
+        <a href="{% url 'checkout' %}" class="btn btn-success">Оформить заказ</a>
+    </div>
+    <script src="{% static 'js/menu.js' %}"></script>
 {% endblock %}

@@ -1,172 +1,29 @@
+
+{% load static %}
+
+
 <!DOCTYPE html>
 <html lang="tg">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <title>{% block title %}Меню хӯроки мо{% endblock %}</title>
-
-  <style>
-    :root {
-      --bg-color: #ffffff;
-      --text-color: #000000;
-      --item-bg: #f9f9f9;
-      --link-color: #4CAF50;
-      --link-hover-glow: #4CAF50;
-    }
-
-    body.dark-theme {
-      --bg-color: #121212;
-      --text-color: #ffffff;
-      --item-bg: #1e1e1e;
-    }
-
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      font-family: sans-serif;
-      padding: 20px;
-    }
-
-    a {
-      color: var(--link-color);
-      text-decoration: none;
-      font-weight: bold;
-      transition: all 0.3s ease;
-    }
-
-    a:hover {
-      color: white;
-      text-shadow: 0 0 5px var(--link-hover-glow), 0 0 10px var(--link-hover-glow);
-    }
-
-    #popup {
-      display: none;
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #333;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 8px;
-      z-index: 999;
-    }
-
-    .search-bar {
-      max-width: 600px;
-    }
-  </style>
 </head>
 
 <body>
-
-  <!-- Навбар с дропдауном -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light rounded shadow mb-4">
-    <div class="container-fluid">
-      <a class="navbar-brand fw-bold" href="/">🍲 Хӯроки мо</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse justify-content-between" id="navbarContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
-          <!-- Дропдаун -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="menuDropdown" role="button" data-bs-toggle="dropdown">
-              Меню
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="menuDropdown">
-              <li><a class="dropdown-item" href="/menu/">Асосӣ</a></li>
-              <li><a class="dropdown-item" href="/popular/">Машҳур</a></li>
-              <li><a class="dropdown-item" href="/cart/">Сабад</a></li>
-              <li><a class="dropdown-item" href="/orders/">Фармоишҳо</a></li>
-            </ul>
-          </li>
-
-        </ul>
-
-        <!-- Строка поиска -->
-        <form class="d-flex search-bar" role="search" method="GET" action="/search/">
-          <input class="form-control me-2" type="search" name="q" placeholder="Ҷустуҷӯ..." aria-label="Search">
-          <select class="form-select me-2" name="category">
-            <option value="">Ҳама категорияҳо</option>
-            <option value="osh">Ош</option>
-            <option value="кабоб">Кабоб</option>
-            <option value="салат">Салат</option>
-            <option value="десерт">Десерт</option>
-          </select>
-          <button class="btn btn-outline-success" type="submit">Ҷустуҷӯ</button>
-        </form>
-
-        <!-- Авторизация + Тема -->
-        <div class="ms-3">
-          <button class="btn btn-sm btn-outline-primary me-2" id="login-logout-btn" onclick="toggleLoginLogout()">Войти</button>
-          <button class="btn btn-sm btn-outline-secondary" onclick="toggleTheme()">🌙</button>
-        </div>
-      </div>
-    </div>
-  </nav>
+ 
 
   {% block content %}{% endblock %}
 
-  <div id="popup"></div>
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer"></div>
 
-  <!-- Bootstrap JS -->
+  
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-  <script>
-    function toggleLoginLogout() {
-      const phone = localStorage.getItem('phoneNumber');
-      if (phone) {
-        localStorage.removeItem('phoneNumber');
-        alert("Шумо аз система баромадед.");
-        location.reload();
-      } else {
-        const input = prompt("Номери телефони худро ворид кунед:");
-        if (input) {
-          localStorage.setItem('phoneNumber', input);
-          alert("Шумо бомуваффақият сабт шудед!");
-          location.reload();
-        }
-      }
-    }
-
-    function toggleTheme() {
-      const body = document.body;
-      const currentTheme = body.classList.contains('dark-theme') ? 'dark' : 'light';
-
-      if (currentTheme === 'light') {
-        body.classList.add('dark-theme');
-        localStorage.setItem('theme', 'dark');
-      } else {
-        body.classList.remove('dark-theme');
-        localStorage.setItem('theme', 'light');
-      }
-    }
-
-    function showPopup(message) {
-      const popup = document.getElementById('popup');
-      popup.textContent = message;
-      popup.style.display = 'block';
-      setTimeout(() => {
-        popup.style.display = 'none';
-      }, 3000);
-    }
-
-    window.onload = function () {
-      const phone = localStorage.getItem('phoneNumber');
-      const loginBtn = document.getElementById('login-logout-btn');
-      if (loginBtn) {
-        loginBtn.textContent = phone ? 'Выйти' : 'Войти';
-      }
-
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme === 'dark') {
-        document.body.classList.add('dark-theme');
-      }
-    };
-  </script>
+  <script src="{% static 'js/base.js' %}"></script>
 </body>
 </html>

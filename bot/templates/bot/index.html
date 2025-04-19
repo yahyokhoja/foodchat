@@ -1,179 +1,68 @@
-
-{% extends 'bot/base.html' %}
 {% load static %}
 
-{% block title %}Фармоиши хӯрок{% endblock %}
+{% block title %}Главная страница{% endblock %}
 
 {% block content %}
+    <!-- Подключение header.html -->
+    {% include 'bot/header.html' %}
 
-<div class="container">
-    <h1>Хуш омадед!</h1>
-    <div id="welcome-message"></div>
+    <div class="container">
+        <h1>Служба доставки</h1>
+        <div id="welcome-message"></div>
 
-    <div id="registration-form" style="display: none;">
-        <h3>Регистрация</h3>
-        <p>Номери телефони худро ворид кунед:</p>
-        <input type="text" id="phone-number" placeholder="Номери телефон" />
-        <br>
-        <button onclick="registerUser()">Сабт кардан</button>
-    </div>
-</div>
-
-<h2 class="text-center">Меню</h2>
-
-<!-- Карусель вместо карточек -->
-<div id="dishes-container" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-inner">
-        {% for dish in dishes %}
-        <div class="carousel-item {% if forloop.first %}active{% endif %}">
-            <div class="dish-card">
-                <img src="{{ dish.image.url }}" alt="{{ dish.name }}" class="d-block w-100">
-                <h3>{{ dish.name }}</h3>
-                <p>{{ dish.description }}</p>
-                <strong>{{ dish.price }} сомонӣ</strong><br><br>
-                <button onclick='addToCart({
-                    "id": "{{ dish.id }}",
-                    "name": "{{ dish.name }}",
-                    "description": "{{ dish.description }}",
-                    "price": "{{ dish.price }}",
-                    "image": "{{ dish.image.url }}"
-                })'>Ба сабад</button>
-            </div>
+        <div id="registration-form" style="display: none;">
+            <h3>Регистрация</h3>
+            <p>Введите свой номер телефона:</p>
+            <input type="text" id="phone-number" placeholder="Номер телефона" />
+            <br>
+            <button onclick="registerUser()">Зарегистрироваться</button>
         </div>
-        {% empty %}
-        <p>Меню дар айни ҳол холӣ аст.</p>
-        {% endfor %}
     </div>
 
-    <!-- Кнопки для навигации по карусели -->
-    <button class="carousel-control-prev" type="button" data-bs-target="#dishes-container" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Предыдущий</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#dishes-container" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Следующий</span>
-    </button>
-</div>
+    <h2 class="text-center">Меню</h2>
 
-<style>
-    #dishes-container {
-        margin-top: 30px;
-        max-width: 100%;
-        height: auto;
-    }
+    <!-- Карусель -->
+    <div id="dishes-container" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            {% for dish in dishes %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <div class="dish-card">
+                    <img src="{{ dish.image.url }}" alt="{{ dish.name }}" class="d-block w-100">
+                    <h3>{{ dish.name }}</h3>
+                    <p>{{ dish.description }}</p>
+                    <strong>{{ dish.price }} сомони</strong><br><br>
+                    <button onclick='addToCart({
+                        "id": "{{ dish.id }}",
+                        "name": "{{ dish.name }}",
+                        "description": "{{ dish.description }}",
+                        "price": "{{ dish.price }}",
+                        "image": "{{ dish.image.url }}"
+                    })'>В корзину</button>
+                </div>
+            </div>
+            {% empty %}
+            <p>Меню на данный момент пусто.</p>
+            {% endfor %}
+        </div>
 
-    .dish-card {
-        padding: 15px;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        background-color: white;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        transition: transform 0.2s ease;
-        text-align: center;
-        max-width: 300px;
-        margin: auto;
-    }
+        <!-- Навигация карусели -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#dishes-container" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Предыдущий</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#dishes-container" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Следующий</span>
+        </button>
+    </div>
+{% endblock %}
 
-    .dish-card img {
-        width: 100%;
-        height: auto;
-        object-fit: cover;
-        border-radius: 10px;
-    }
+{% block extra_head %}
+    <!-- Подключение дополнительных стилей -->
+    <link rel="stylesheet" href="{% static 'css/index_styles.css' %}">
+{% endblock %}
 
-    .dish-card h3 {
-        margin: 10px 0 5px;
-    }
-
-    .dish-card p {
-        color: #666;
-        font-size: 14px;
-    }
-
-    .dish-card button {
-        padding: 8px 12px;
-        background: #3498db;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    .dish-card button:hover {
-        background: #2980b9;
-    }
-
-    /* Адаптивность для мобильных устройств */
-    @media (max-width: 768px) {
-        .carousel-item {
-            text-align: center;
-        }
-
-        .dish-card {
-            max-width: 80%;
-            margin: 10px auto;
-        }
-
-        .carousel-control-prev-icon,
-        .carousel-control-next-icon {
-            background-color: #3498db;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .dish-card {
-            max-width: 90%;
-            margin: 10px auto;
-        }
-    }
-</style>
-
-<script>
-    function addToCart(dish) {
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        cart.push(dish);
-        localStorage.setItem('cart', JSON.stringify(cart));
-        alert(`${dish.name} ба сабад илова шуд.`);
-    }
-
-    function checkLoginStatus() {
-        const phoneNumber = localStorage.getItem('phoneNumber');
-        const loginLogoutBtn = document.getElementById('login-logout-btn');
-        const welcomeMsg = document.getElementById('welcome-message');
-
-        if (phoneNumber) {
-            loginLogoutBtn.textContent = 'Выйти';
-            welcomeMsg.innerHTML = `Салом, <strong>${phoneNumber}</strong>!`;
-        } else {
-            loginLogoutBtn.textContent = 'Войти';
-            welcomeMsg.innerHTML = '';
-        }
-    }
-
-    function toggleLoginLogout() {
-        const phoneNumber = localStorage.getItem('phoneNumber');
-        if (phoneNumber) {
-            localStorage.removeItem('phoneNumber');
-            alert("Шумо аз система баромадед.");
-            location.reload();
-        } else {
-            document.getElementById("registration-form").style.display = "block";
-        }
-    }
-
-    function registerUser() {
-        const phoneNumber = document.getElementById('phone-number').value;
-        if (phoneNumber) {
-            localStorage.setItem('phoneNumber', phoneNumber);
-            alert("Шумо бомуваффақият сабтином шудед!");
-            window.location.href = "/menu/";
-        } else {
-            alert("Лутфан, номери телефони худро ворид кунед.");
-        }
-    }
-
-    checkLoginStatus();
-</script>
-
+{% block extra_js %}
+    <!-- Подключение дополнительных скриптов -->
+    <script src="{% static 'js/index_script.js' %}"></script>
 {% endblock %}

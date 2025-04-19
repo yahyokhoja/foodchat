@@ -1,10 +1,12 @@
-{% extends 'base.html' %}
-
-{% block content %}
-<div class="container mt-5">
-  <h2>🛒 Корзина</h2>
-  <p>Здесь будет отображаться содержимое корзины.</p>
-  <ul id="cart-items"></ul>
-  <button class="btn btn-success mt-3" onclick="confirmOrder()">✅ Оформить заказ</button>
-</div>
-{% endblock %}
+{% if cart %}
+    <ul>
+    {% for item_id, item in cart.items %}
+        <li>
+            {{ item.name }} - {{ item.quantity }} x {{ item.price }} руб.
+        </li>
+    {% endfor %}
+    </ul>
+    <p>Общая стоимость: {{ cart.total_price }}</p>
+{% else %}
+    <p>Ваша корзина пуста.</p>
+{% endif %}

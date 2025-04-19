@@ -1,0 +1,21 @@
+<form method="POST" action="{% url 'make_order' %}" id="orderForm">
+  {% csrf_token %}
+  <input type="text" name="phone_number" placeholder="Телефон" required>
+  <input type="text" name="ordered_by" placeholder="Имя заказчика">
+  <input type="text" name="delivery_address" placeholder="Адрес">
+  <select name="payment_method">
+      <option value="cash">Наличные</option>
+      <option value="card">Карта</option>
+  </select>
+  <select name="delivery_method">
+      <option value="pickup">Самовывоз</option>
+      <option value="delivery">Доставка</option>
+  </select>
+  <input type="hidden" name="items" id="itemsInput">
+  <button type="submit">Оформить заказ</button>
+</form>
+
+<script>
+const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+document.getElementById("itemsInput").value = JSON.stringify(cart);
+</script>

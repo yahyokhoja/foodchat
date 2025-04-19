@@ -1,34 +1,20 @@
+
 from django.urls import path
-from .views import chatbot_response, chat_page  # исправили импорт
-from .views import OrderCreateView
-from .views import latest_order
 from . import views
-from .views import dish_list
 from django.contrib.auth.views import LogoutView
 
-
-
 urlpatterns = [
-
-    path('menu/', views.menu, name='menu'),
-    path('cart/', views.cart, name='cart'),
-    path('orders/', views.orders, name='orders'),
-    path('profile/', views.profile, name='profile'),
-    path('api/dishes/', dish_list, name='dish-list'),
-    path('logout/', LogoutView.as_view(next_page='/'), name='logout'),
-
+    path('', views.index, name='index'),  # Главная страница
+    path('menu/', views.menu, name='menu'),  # Меню
+    path('orders/', views.orders, name='orders'),  # Страница заказов
+    path('cart/', views.cart, name='cart'),  # Корзина
+    path('profile/', views.profile, name='profile'),  # Профиль
+    path('latest_order/', views.latest_order, name='latest_order'),  # Последний заказ
+    path('chat/', views.chat_page, name='chat'),  # Страница чата
+    path('chatbot_response/', views.chatbot_response, name='chatbot_response'),  # Ответ бота
+    path('search/', views.search, name='search'),  # Маршрут для поиска
+    path('logout/', LogoutView.as_view(), name='logout'),  # Выход
+    path('checkout/', views.checkout, name='checkout'),  # Оформление заказа
+    path('make_order/', views.make_order, name='make_order'),  # Обработка оформления заказа
+    path('add_to_cart/<int:dish_id>/', views.add_to_cart, name='add_to_cart'),  # Добавление блюда в корзину
 ]
-
-
-def search(request):
-    query = request.GET.get('q', '')
-    category = request.GET.get('category', '')
-    results = Dish.objects.all()
-
-    if query:
-        results = results.filter(name__icontains=query)
-
-    if category:
-        results = results.filter(category__iexact=category)
-
-    return render(request, 'bot/search_results.html', {'results': results, 'query': query})

@@ -1,249 +1,61 @@
-
-{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+  {% load static %}
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title></title>
+  <!-- Подключение стилей -->
+  <link rel="stylesheet" href="{% static 'css/header.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <!-- Подключение Bootstrap для dropdown -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<style>
-  :root {
-    --main-color: #3498db;
-    --bg-light: #ffffff;
-    --bg-dark: #1e1e1e;
-    --text-light: #2c3e50;
-    --text-dark: #f0f0f0;
-  }
+<body>
 
-  body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    transition: background-color 0.3s, color 0.3s;
-  }
+  <header>
+    <div class="burger" onclick="toggleMobileMenu()">
+      <div class="burger-line"></div>
+      <div class="burger-line"></div>
+      <div class="burger-line"></div>
+    </div>
 
-  header {
-    background-color: var(--main-color);
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    flex-wrap: wrap;
-    position: relative;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
+    <nav id="navbar" class="navbar">
+      <a href="/" class="nav-link"><i class="fas fa-home"></i> Асосӣ</a>
+      <a href="/admin/" class="nav-link"><i class="fas fa-tools"></i> Админ</a>
+      <a href="/menu/" class="nav-link"><i class="fas fa-list"></i> Меню</a>
 
-  header h1 {
-    font-size: 24px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+      {% if user.is_authenticated %}
+        <!-- Dropdown для пользователя -->
+        <div class="dropdown">
+          <span class="user-info dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-user"></i> {{ user.username }}
+          </span>
+          <ul class="dropdown-menu" aria-labelledby="userDropdown">
+            <li><a href="{% url 'profile' %}" class="dropdown-item"><i class="fas fa-cogs"></i> Личный кабинет</a></li>
+            <li><a href="{% url 'logout' %}" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Выйти</a></li>
+          </ul>
+        </div>
+      {% else %}
+        <button id="login-logout-btn" class="login-btn" onclick="toggleLoginLogout()">
+          <i class="fas fa-sign-in-alt"></i> Войти
+        </button>
+      {% endif %}
 
-  nav {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  nav a,
-  nav span {
-    color: white;
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.3s ease, transform 0.2s;
-  }
-
-  nav a:hover {
-    transform: translateY(-2px);
-    color: #ecf0f1;
-  }
-
-  #login-logout-btn {
-    background-color: white;
-    color: var(--main-color);
-    border: none;
-    border-radius: 6px;
-    padding: 8px 14px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  #login-logout-btn:hover {
-    background-color: #ecf0f1;
-    transform: scale(1.05);
-  }
-
-  .sub-nav {
-    background-color: #f4f4f4;
-    padding: 10px 20px;
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    border-top: 1px solid #ddd;
-    flex-wrap: wrap;
-    transition: background-color 0.3s ease;
-  }
-
-  .sub-nav a,
-  .sub-nav button {
-    text-decoration: none;
-    color: var(--text-light);
-    background: none;
-    border: none;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    transition: color 0.3s ease, transform 0.2s ease;
-  }
-
-  .sub-nav a:hover,
-  .sub-nav button:hover {
-    color: var(--main-color);
-    transform: translateY(-1px);
-  }
-
-  /* Dark Theme */
-  .dark-theme {
-    background-color: var(--bg-dark);
-    color: var(--text-dark);
-  }
-
-  .dark-theme header {
-    background-color: #222;
-    color: #f0f0f0;
-  }
-
-  .dark-theme nav a,
-  .dark-theme nav span {
-    color: #f0f0f0;
-  }
-
-  .dark-theme .sub-nav {
-    background-color: #333;
-  }
-
-  .dark-theme .sub-nav a,
-  .dark-theme .sub-nav button {
-    color: #ddd;
-  }
-
-  .dark-theme #login-logout-btn {
-    background-color: #f0f0f0;
-    color: #1e1e1e;
-  }
-
-  /* Burger menu */
-  .burger {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-    gap: 4px;
-  }
-
-  .burger div {
-    width: 25px;
-    height: 3px;
-    background-color: white;
-    transition: 0.3s;
-  }
-
-  .mobile-nav {
-    display: none;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 10px;
-  }
-
-  .mobile-nav.active {
-    display: flex;
-  }
-
-  @media (max-width: 768px) {
-    nav {
-      display: none;
-    }
-
-    .burger {
-      display: flex;
-    }
-
-    .mobile-nav a {
-      color: white;
-      padding: 10px 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .mobile-nav a:hover {
-      color: #ddd;
-    }
-  }
-</style>
-
-<header>
-
-
-  <div class="burger" onclick="toggleMobileMenu()">
-    <div></div>
-    <div></div>
-    <div></div>
-  </div>
-
-  <nav>
-    <a href="/"><i class="fas fa-home"></i> Асосӣ</a>
-    <a href="/admin/"><i class="fas fa-tools"></i> Админ</a>
-    <a href="/menu/"><i class="fas fa-list"></i> Меню</a>
-
-    {% if user.is_authenticated %}
-      <span><i class="fas fa-user"></i> {{ user.username }}</span>
-      <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Выйти</a>
-    {% else %}
-      <button id="login-logout-btn" onclick="toggleLoginLogout()">
-        <i class="fas fa-sign-in-alt"></i> Войти
+      <!-- Кнопка для переключения темы -->
+      <button id="theme-toggle-btn" class="theme-toggle-btn" onclick="toggleTheme()">
+        <i class="fas fa-moon"></i> <!-- Иконка Луны для темной темы -->
       </button>
-    {% endif %}
-  </nav>
+    </nav>
 
-  <div class="mobile-nav" id="mobileNav">
-    <a href="/"><i class="fas fa-home"></i> Асосӣ</a>
-    <a href="/admin/"><i class="fas fa-tools"></i> Админ</a>
-    <a href="/menu/"><i class="fas fa-list"></i> Меню</a>
-    {% if user.is_authenticated %}
-      <a href="#"><i class="fas fa-user"></i> {{ user.username }}</a>
-      <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Выйти</a>
-    {% else %}
-      <a href="#"><i class="fas fa-sign-in-alt"></i> Войти</a>
-    {% endif %}
-  </div>
-</header>
+  </header>
 
-<nav class="sub-nav">
-  <a href="{% url 'orders' %}"><i class="fas fa-scroll"></i> Фармоиш</a>
-  <a href="{% url 'profile' %}"><i class="fas fa-user-circle"></i> Профил</a>
-  <button onclick="toggleTheme()"><i class="fas fa-moon"></i> Тема</button>
-</nav>
+  <!-- Ваш контент -->
 
-<script>
-  function toggleTheme() {
-    document.body.classList.toggle('dark-theme');
-    localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
-  }
+  <!-- Подключение дополнительных скриптов -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{% static 'js/header.js' %}"></script>
+</body>
 
-  function toggleMobileMenu() {
-    const menu = document.getElementById("mobileNav");
-    menu.classList.toggle("active");
-  }
-
-  window.addEventListener('DOMContentLoaded', () => {
-    if (localStorage.getItem('theme') === 'dark') {
-      document.body.classList.add('dark-theme');
-    }
-  });
-</script>
+</html>
