@@ -29,3 +29,4 @@ venv/
 *.swo
 .idea/
 *.iml
+db.sqlite3
