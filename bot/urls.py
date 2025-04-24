@@ -2,6 +2,8 @@
 from django.urls import path
 from . import views
 from django.contrib.auth.views import LogoutView
+from bot.views_webhook import github_webhook
+
 
 urlpatterns = [
     path('', views.index, name='index'),  # Главная страница
@@ -17,4 +19,10 @@ urlpatterns = [
     path('checkout/', views.checkout, name='checkout'),  # Оформление заказа
     path('make_order/', views.make_order, name='make_order'),  # Обработка оформления заказа
     path('add_to_cart/<int:dish_id>/', views.add_to_cart, name='add_to_cart'),  # Добавление блюда в корзину
+  
+
+
+    path('webhook/', github_webhook),  # теперь webhook доступен по /webhook/
 ]
+
+
